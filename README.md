@@ -22,11 +22,11 @@ It is meant for cases where part of the screen is physically broken, but the res
 1. Install AutoHotkey v2.
 2. Download or clone this repository.
 3. Run `DeadZoneCut.ahk`.
-4. Accept the UAC prompt if it appears. The script relaunches itself as administrator so hotkeys work more reliably in games.
+4. For more reliable hotkeys in games, it is best to run the script as administrator.
 
 ## Changing the hidden zone size
 
-Open `DeadZoneCut.ahk` and change this value near the top:
+Open `DeadZoneCut.ahk` in a text editor such as Windows Notepad, Notepad++, Sublime Text, or VS Code, then change this value near the top:
 
 ```ahk
 global CutPixels := 175
@@ -116,4 +116,10 @@ This is useful when a game places important UI elements too close to the top or 
 
 I could not find a simple ready-made tool for this exact use case, so I made one.
 
+On my monitor, the problem started as lines and artifacts near the bottom edge. After reading other users' reports, it looked like this is not that unusual on some displays, especially cheaper ones. This script is built around that specific failure pattern: a monitor that is still usable, except for a damaged strip at the bottom.
+
 If you have a monitor with a damaged strip at the bottom, this script can help keep games and apps usable without changing your whole setup.
+
+## Note
+
+This script and README were created with AI assistance and then adjusted for this specific use case.
