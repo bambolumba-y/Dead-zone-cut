@@ -69,15 +69,16 @@ Trade-off:
 
 Hotkeys:
 
-- `Ctrl + Alt + C`
-- `Ctrl + Alt + Shift + C` (backup)
+- `Ctrl + Alt + C` - keep the top of the game visible
+- `Ctrl + Alt + F11` - backup hotkey for the same mode
+- `Ctrl + Alt + Shift + C` - keep the bottom of the game above the damaged zone
 
 What it does:
 
 - Removes the active window border
 - Keeps the game at a normal `16:9` shape
 - Fills the full screen width to avoid side bars
-- Pushes the extra height outside the visible screen area
+- Crops extra height vertically
 
 Best for:
 
@@ -87,6 +88,10 @@ Best for:
 Trade-off:
 
 - Part of the image is cropped vertically
+
+Use `Ctrl + Alt + C` first if the top of the image matters. This keeps the top edge aligned with the monitor and lets the bottom fall into the damaged zone.
+
+Use `Ctrl + Alt + Shift + C` if the game's bottom UI is more important. This keeps the bottom of the game above the damaged zone, but the top of the image may move above the monitor.
 
 ## Crop position adjustment
 

@@ -11,11 +11,12 @@ global NewBottom := A_ScreenHeight - CutPixels
 
 ; Crop/zoom mode:
 ; The game gets a normal 16:9 window, full screen width, so it does not add side bars.
-; The extra height is moved outside the visible safe area.
+; Top crop keeps the top visible. Bottom crop keeps the bottom above the dead zone.
 global CropOffsetY := 0
 global CropNudgeStep := 20
 global GameAspectW := 16
 global GameAspectH := 9
+global LastCropAnchor := "top"
 
 global SavedStyles := Map()
 global SavedPlacements := Map()
@@ -44,9 +45,10 @@ OnExit(RestoreWorkArea)
 ^!f::ApplyFitMode()
 ^!F12::ApplyFitMode()
 
-; Crop/zoom mode: full width without side bars for games that lock aspect ratio.
-^!c::ApplyCropMode()
-^!+c::ApplyCropMode()
+; Crop/zoom modes: full width without side bars for games that lock aspect ratio.
+^!c::ApplyCropTopMode()
+^!F11::ApplyCropTopMode()
+^!+c::ApplyCropBottomMode()
 
 ; Move the cropped picture after crop/zoom mode.
 ^!PgUp::NudgeCrop(-CropNudgeStep)
@@ -66,8 +68,9 @@ MsgBox(
     . "Hotkeys:`n"
     . "Ctrl + Alt + F: fit safe area`n"
     . "Ctrl + Alt + F12: fit safe area, backup`n"
-    . "Ctrl + Alt + C: crop/zoom full width, no side bars`n"
-    . "Ctrl + Alt + Shift + C: crop/zoom backup`n"
+    . "Ctrl + Alt + C: crop/zoom, keep top visible`n"
+    . "Ctrl + Alt + F11: crop/zoom, keep top visible, backup`n"
+    . "Ctrl + Alt + Shift + C: crop/zoom, keep bottom safe`n"
     . "Ctrl + Alt + PgUp/PgDn: move cropped picture`n"
     . "Ctrl + Alt + R: restore active window`n"
     . "Ctrl + Alt + W: restore work area",
@@ -92,27 +95,43 @@ ApplyFitMode() {
     ShowTip("Fit mode applied")
 }
 
-ApplyCropMode() {
-    global NewBottom, CropOffsetY, GameAspectW, GameAspectH
+ApplyCropTopMode() {
+    ApplyCropMode("top")
+}
+
+ApplyCropBottomMode() {
+    ApplyCropMode("bottom")
+}
+
+ApplyCropMode(anchor := "") {
+    global NewBottom, CropOffsetY, GameAspectW, GameAspectH, LastCropAnchor
 
     active_id := PrepareActiveWindow()
     if !active_id
         return
 
     hwnd := "ahk_id " active_id
+    if anchor = ""
+        anchor := LastCropAnchor
+    LastCropAnchor := anchor
 
     ; Use a normal game aspect ratio. On a 1920x1080 monitor this creates
-    ; 1920x1080, then moves 160 px above the safe area if CutPixels is 160.
+    ; 1920x1080 for full-width 16:9 games.
     targetW := A_ScreenWidth
     targetH := Round(targetW * GameAspectH / GameAspectW)
 
-    ; Keep the bottom of the game inside the safe area by default.
-    targetY := NewBottom - targetH + CropOffsetY
+    if anchor = "bottom" {
+        ; Keep the bottom of the game inside the safe area.
+        targetY := NewBottom - targetH + CropOffsetY
+    } else {
+        ; Keep the top of the game visible and crop the bottom instead.
+        targetY := CropOffsetY
+    }
 
     WinMove(0, targetY, targetW, targetH, hwnd)
 
     SoundBeep(900, 200)
-    ShowTip("Crop/zoom mode applied")
+    ShowTip(anchor = "bottom" ? "Crop/zoom bottom-safe mode applied" : "Crop/zoom top-safe mode applied")
 }
 
 NudgeCrop(deltaY) {
