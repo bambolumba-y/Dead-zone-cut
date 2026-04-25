@@ -111,7 +111,7 @@ This is useful when a game places important UI elements too close to the top or 
 - Works best with games running in `Windowed` or `Borderless Windowed` mode
 - True exclusive fullscreen games may ignore window resizing and border changes
 - Some games will still fight the window size and may need extra tweaking. One example I know is `Forza Horizon 5`.
-- Some games may become effectively unplayable with this workaround because mouse input or cursor locking does not behave correctly. For example, in `Far Cry 5` the mouse could escape the game window during play.
+- Some games may become effectively unplayable with this workaround because mouse capture can break. For example, in `Far Cry 5`, while turning the camera, the cursor could reach the edge of the screen, leave the game window, and start interacting with Windows instead of continuing to control the camera.
 
 ## Why this exists
 
